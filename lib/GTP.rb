@@ -1,5 +1,6 @@
 require "GTP/version"
+require "GTP/reader"
 
 module GTP
-  # Your code goes here...
+   
 end
