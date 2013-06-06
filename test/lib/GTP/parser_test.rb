@@ -1,9 +1,7 @@
 require "test_helper"
 
-describe GTP::Reader do
+describe GTP::Parser do
 
   it "must open a GTP file" do
-    
   end
-
 end

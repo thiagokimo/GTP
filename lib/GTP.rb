@@ -1,5 +1,5 @@
 require "GTP/version"
-require "GTP/reader"
+require "GTP/parser"
 
 module GTP
    
