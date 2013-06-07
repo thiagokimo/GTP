@@ -1,5 +1,5 @@
 module GTP
-  class Reader
-  
+  class Parser
+
   end
 end
