@@ -1,5 +1,5 @@
 module GTP
-  class Parser
+  class GP4
 
     attr_accessor :file, :version
     attr_reader :file_path
