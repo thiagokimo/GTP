@@ -95,10 +95,12 @@ module GTP
 
       notice = ""
 
-      for i in 1..lines
+      for i in 1..lines-1
         notice << read_string << "\n"
       end
 
+      notice << read_string
+      
       self.notice = notice
     end
   end
