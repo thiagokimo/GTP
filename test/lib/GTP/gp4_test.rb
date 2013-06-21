@@ -5,7 +5,9 @@ describe GTP::GP4 do
   it "must read the file version" do
     parser = GTP::GP4.new "test/tabs/test.gp4"
 
-    parser.parse_version.must_equal "FICHIER GUITAR PRO v4.06"
+    parser.parse_version
+
+    parser.version.must_match %r/FICHIER GUITAR PRO v4./
   end
 
   it "must read the tablature info" do

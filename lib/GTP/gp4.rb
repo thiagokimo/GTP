@@ -9,7 +9,10 @@ module GTP
     end
 
     def parse_version
-      self.version = IO.binread(self.file, 30, 1).strip
+
+      size = IO.binread(self.file, 1).bytes.to_a[0].to_i
+
+      self.version = IO.binread(self.file, size, 1).strip
     end
   end
 end
