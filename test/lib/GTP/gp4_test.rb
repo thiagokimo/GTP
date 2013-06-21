@@ -11,7 +11,20 @@ describe GTP::GP4 do
   end
 
   it "must read the tablature info" do
-    
+    parser = GTP::GP4.new "test/tabs/test.gp4"
+
+    parser.parse_info
+
+    parser.title.must_equal "Title"
+    parser.subtitle.must_equal "Subtitle"
+    parser.artist.must_equal "Artist"
+    parser.album.must_equal "Album"
+    parser.author.must_equal "Author"
+    parser.copyright.must_equal "Copyright"
+    parser.tab.must_equal "Tab"
+    parser.instruction.must_equal "Instruction"
+    # parser.notice.must_equal "N line1\nN line2\nN line3\nN line4\n"
+
   end
 
   it "must read the tablature lyrics" do
