@@ -24,7 +24,7 @@ describe GTP::GP4 do
     parser.tab.must_equal "Tab"
     parser.instruction.must_equal "Instruction"
     parser.notice.must_equal "N line 1\nN line 2\nN line 3\nN line 4"
-
+    parser.triplet_feel.must_match "0"
   end
 
   it "must read the tablature lyrics" do

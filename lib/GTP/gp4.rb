@@ -12,6 +12,7 @@ module GTP
                   :tab,
                   :instruction,
                   :notice,
+                  :triplet_feel,
                   :offset
     attr_reader :file_path
 
@@ -54,6 +55,7 @@ module GTP
       parse_tab
       parse_instruction
       parse_notice
+      parse_triplet_feel
     end
 
     def parse_title
@@ -102,6 +104,10 @@ module GTP
       notice << read_string
       
       self.notice = notice
+    end
+
+    def parse_triplet_feel
+      self.triplet_feel = IO.binread(self.file, 1, self.offset).bytes.to_a[0].to_s
     end
   end
 end
