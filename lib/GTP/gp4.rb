@@ -1,7 +1,18 @@
 module GTP
   class GP4
 
-    attr_accessor :file, :version, :title, :subtitle, :artist, :album, :author, :copyright, :tab, :instruction, :offset
+    attr_accessor :file,
+                  :version,
+                  :title,
+                  :subtitle,
+                  :artist,
+                  :album,
+                  :author,
+                  :copyright,
+                  :tab,
+                  :instruction,
+                  :notice,
+                  :offset
     attr_reader :file_path
 
     INTEGER_SIZE = 4
@@ -42,6 +53,7 @@ module GTP
       parse_copyright
       parse_tab
       parse_instruction
+      parse_notice
     end
 
     def parse_title
@@ -74,6 +86,20 @@ module GTP
 
     def parse_instruction
       self.instruction = read_string
+    end
+
+    def parse_notice
+      lines = IO.binread(self.file, INTEGER_SIZE, self.offset).unpack("L")[0]
+
+      self.offset = self.offset+INTEGER_SIZE
+
+      notice = ""
+
+      for i in 1..lines
+        notice << read_string << "\n"
+      end
+
+      self.notice = notice
     end
   end
 end

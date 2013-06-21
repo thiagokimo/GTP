@@ -23,7 +23,7 @@ describe GTP::GP4 do
     parser.copyright.must_equal "Copyright"
     parser.tab.must_equal "Tab"
     parser.instruction.must_equal "Instruction"
-    # parser.notice.must_equal "N line1\nN line2\nN line3\nN line4\n"
+    parser.notice.must_equal "N line 1\nN line 2\nN line 3\nN line 4\n"
 
   end
 
