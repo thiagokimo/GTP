@@ -43,36 +43,10 @@ module GTP
       end
     end
 
-    def parse_title
-      self.title = read_string
-    end
-
-    def parse_subtitle
-      self.subtitle = read_string
-    end
-
-    def parse_artist
-      self.artist = read_string
-    end
-
-    def parse_album
-      self.album = read_string
-    end
-
-    def parse_author
-      self.author = read_string
-    end
-
-    def parse_copyright
-      self.copyright = read_string
-    end
-
-    def parse_tab
-      self.tab = read_string
-    end
-
-    def parse_instruction
-      self.instruction = read_string
+    FIELDS.each do |field|
+      define_method "parse_#{field}" do
+        self.public_send "#{field}=", (self.public_send 'read_string')
+      end
     end
 
     def parse_notice
