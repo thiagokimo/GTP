@@ -1,19 +1,11 @@
 module GTP
   class GP4
+    FIELDS = %w(title subtitle artist album author copyright tab instruction notice triplet_feel)
 
-    attr_accessor :file,
-                  :version,
-                  :title,
-                  :subtitle,
-                  :artist,
-                  :album,
-                  :author,
-                  :copyright,
-                  :tab,
-                  :instruction,
-                  :notice,
-                  :triplet_feel,
-                  :offset
+    attr_accessor :file, :version, :offset
+
+    attr_accessor *FIELDS
+
     attr_reader :file_path
 
     INTEGER_SIZE = 4
@@ -46,16 +38,9 @@ module GTP
     end
 
     def parse_info
-      parse_title
-      parse_subtitle
-      parse_artist
-      parse_album
-      parse_author
-      parse_copyright
-      parse_tab
-      parse_instruction
-      parse_notice
-      parse_triplet_feel
+      FIELDS.each do |field|
+        self.public_send "parse_#{field}"
+      end
     end
 
     def parse_title
@@ -102,7 +87,7 @@ module GTP
       end
 
       notice << read_string
-      
+
       self.notice = notice
     end
 
