@@ -109,5 +109,9 @@ module GTP
     def parse_triplet_feel
       self.triplet_feel = IO.binread(self.file, 1, self.offset).bytes.to_a[0].to_s
     end
+
+    def to_json
+      
+    end
   end
 end

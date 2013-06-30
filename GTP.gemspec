@@ -7,9 +7,9 @@ Gem::Specification.new do |spec|
   spec.name          = "GTP"
   spec.version       = GTP::VERSION
   spec.authors       = ["Thiago Rocha"]
-  spec.email         = ["kimobr@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.email         = ["kimo@kimo.io"]
+  spec.description   = %q{A Guitar Pro file parser}
+  spec.summary       = %q{It parses gtp files}
   spec.homepage      = ""
   spec.license       = "MIT"
 
