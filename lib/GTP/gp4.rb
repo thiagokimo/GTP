@@ -1,5 +1,3 @@
-require "pry"
-
 module GTP
   class GP4
     FIELDS = %w(title subtitle artist album author copyright tab instruction notice triplet_feel)
@@ -15,6 +13,18 @@ module GTP
     def initialize(tab_path)
       @file = File.open(tab_path, "r")
       @offset = 31
+    end
+
+    def read_integer
+      self.offset = self.offset+INTEGER_SIZE
+
+      result = IO.binread(self.file, 1, self.offset).bytes.to_a[0].to_i
+
+      self.offset = self.offset + 1
+
+      # binding.pry
+
+      return result
     end
 
     def read_string
@@ -72,7 +82,8 @@ module GTP
     end
 
     def parse_lyrics
-      
+      read_integer
+      track = read_integer
     end
 
     def to_json

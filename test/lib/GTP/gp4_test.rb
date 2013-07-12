@@ -3,17 +3,15 @@ require "test_helper"
 module GTP
   describe GP4 do
 
-    parser = GP4.new "test/tabs/test.gp4"
-
     it "must read the file version" do
-
+      parser = GP4.new "test/tabs/test.gp4"
       parser.parse_version
 
       parser.version.must_match %r/FICHIER GUITAR PRO v4./
     end
 
     it "must read the tablature info" do
-
+      parser = GP4.new "test/tabs/test.gp4"
       parser.parse_info
 
       parser.title.must_equal "Title"
@@ -28,18 +26,28 @@ module GTP
       parser.triplet_feel.must_match "0"
     end
 
-    it "must read the tablature lyrics" do
-      parser.parse_lyrics
+    describe "Lyrics" do
+      parser = GP4.new "test/tabs/test.gp4"
 
-      parser.lyrics.must_equal [
-                                ["1111","1111","1111","1111"], 
-                                ["2222","2222","2222","2222"],
-                                ["3333","3333","3333"],
-                                ["4444","4444"],
-                                ["5555"]
-                               ]
+      before do
+        parser.parse_version
+        parser.parse_info
+      end
+
+      it "must read the tablature lyrics" do
+      
+        parser.parse_lyrics
+
+        parser.lyrics.must_equal [
+                                  ["1111","1111","1111","1111"], 
+                                  ["2222","2222","2222","2222"],
+                                  ["3333","3333","3333"],
+                                  ["4444","4444"],
+                                  ["5555"]
+                                 ]
+      end
     end
-
+    
     it "must read the tablature extra info" do
 
     end
