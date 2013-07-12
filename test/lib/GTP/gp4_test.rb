@@ -3,8 +3,9 @@ require "test_helper"
 module GTP
   describe GP4 do
 
+    parser = GP4.new "test/tabs/test.gp4"
+
     it "must read the file version" do
-      parser = GP4.new "test/tabs/test.gp4"
 
       parser.parse_version
 
@@ -12,7 +13,6 @@ module GTP
     end
 
     it "must read the tablature info" do
-      parser = GP4.new "test/tabs/test.gp4"
 
       parser.parse_info
 
@@ -29,7 +29,7 @@ module GTP
     end
 
     it "must read the tablature lyrics" do
-
+      
     end
 
     it "must read the tablature extra info" do
