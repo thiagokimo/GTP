@@ -29,7 +29,15 @@ module GTP
     end
 
     it "must read the tablature lyrics" do
-      
+      parser.parse_lyrics
+
+      parser.lyrics.must_equal [
+                                ["1111","1111","1111","1111"], 
+                                ["2222","2222","2222","2222"],
+                                ["3333","3333","3333"],
+                                ["4444","4444"],
+                                ["5555"]
+                               ]
     end
 
     it "must read the tablature extra info" do

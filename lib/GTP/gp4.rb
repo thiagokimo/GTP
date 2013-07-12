@@ -1,8 +1,10 @@
+require "pry"
+
 module GTP
   class GP4
     FIELDS = %w(title subtitle artist album author copyright tab instruction notice triplet_feel)
 
-    attr_accessor :file, :version, :offset
+    attr_accessor :file, :version, :offset, :lyrics
 
     attr_accessor *FIELDS
 
@@ -67,6 +69,10 @@ module GTP
 
     def parse_triplet_feel
       self.triplet_feel = IO.binread(self.file, 1, self.offset).bytes.to_a[0].to_s
+    end
+
+    def parse_lyrics
+      
     end
 
     def to_json
