@@ -15,16 +15,28 @@ module GTP
       @offset = 31
     end
 
+    def read_lyrics_string
+
+      length = IO.binread(self.file, INTEGER_SIZE, self.offset).bytes.to_a[0].to_i
+
+      increment_offset INTEGER_SIZE
+
+      string = IO.binread(self.file, length, self.offset).gsub(/[^\d]/, " ")
+
+      increment_offset length
+
+      return string
+    end
+
     def increment_offset delta
       self.offset = self.offset + delta
     end
 
     def read_integer
+
+      result = IO.binread(self.file, INTEGER_SIZE, self.offset).bytes.to_a[0].to_i
+
       increment_offset INTEGER_SIZE
-
-      result = IO.binread(self.file, 1, self.offset).bytes.to_a[0].to_i
-
-      increment_offset 1
 
       return result
     end
@@ -85,8 +97,20 @@ module GTP
     end
 
     def parse_lyrics
-      read_integer
       track = read_integer
+      self.lyrics = Array.new
+
+      for i in 1..5
+        bar = read_integer
+        content = read_lyrics_string
+
+        tuple = Hash.new
+        tuple.store(bar, content)
+
+        self.lyrics.push(tuple)
+      end 
+
+      require "pry"; binding.pry
     end
 
     def to_json
