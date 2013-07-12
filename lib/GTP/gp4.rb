@@ -15,29 +15,31 @@ module GTP
       @offset = 31
     end
 
+    def increment_offset delta
+      self.offset = self.offset + delta
+    end
+
     def read_integer
-      self.offset = self.offset+INTEGER_SIZE
+      increment_offset INTEGER_SIZE
 
       result = IO.binread(self.file, 1, self.offset).bytes.to_a[0].to_i
 
-      self.offset = self.offset + 1
-
-      # binding.pry
+      increment_offset 1
 
       return result
     end
 
     def read_string
 
-      self.offset = self.offset+INTEGER_SIZE
+      increment_offset INTEGER_SIZE
 
       length = IO.binread(self.file, 1, self.offset).bytes.to_a[0].to_i
 
-      self.offset = self.offset + 1
+      increment_offset 1
 
       string = IO.binread(self.file, length, self.offset)
 
-      self.offset = self.offset + length
+      increment_offset length
 
       return string
     end
@@ -64,7 +66,7 @@ module GTP
     def parse_notice
       lines = IO.binread(self.file, INTEGER_SIZE, self.offset).unpack("L")[0]
 
-      self.offset = self.offset+INTEGER_SIZE
+      increment_offset INTEGER_SIZE
 
       notice = ""
 
@@ -79,6 +81,7 @@ module GTP
 
     def parse_triplet_feel
       self.triplet_feel = IO.binread(self.file, 1, self.offset).bytes.to_a[0].to_s
+      increment_offset 1
     end
 
     def parse_lyrics

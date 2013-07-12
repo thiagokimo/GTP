@@ -67,5 +67,9 @@ module GTP
     it "must read the tablature chord diagrams" do
 
     end
+
+    it "must increment the offset" do
+      
+    end
   end
 end
