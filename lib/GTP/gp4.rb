@@ -2,7 +2,7 @@ module GTP
   class GP4
     FIELDS = %w(title subtitle artist album author copyright tab instruction notice triplet_feel)
 
-    attr_accessor :file, :version, :offset, :lyrics, :tempo
+    attr_accessor :file, :version, :offset, :lyrics, :tempo, :key, :octave
 
     attr_accessor *FIELDS
 
@@ -54,6 +54,14 @@ module GTP
       increment_offset length
 
       return string
+    end
+
+    def read_byte
+      byte = IO.binread(self.file, 1, self.offset).bytes.to_a[0].to_i
+
+      increment_offset 1
+
+      return byte
     end
 
     def parse_version
@@ -113,6 +121,14 @@ module GTP
 
     def parse_tempo
       self.tempo = read_integer.to_i
+    end
+
+    def parse_key
+      self.key = read_byte
+    end
+
+    def parse_octave
+      self.octave = read_byte
     end
 
     def to_json
