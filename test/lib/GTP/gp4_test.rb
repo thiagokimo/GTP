@@ -73,5 +73,27 @@ module GTP
         parser.num_tracks.must_equal 1
       end
     end
+
+    describe "Measures" do
+      parser = GP4.new "test/tabs/test.gp4"
+
+      before do
+        parser.parse_version
+        parser.parse_info
+        parser.parse_lyrics
+        parser.parse_tempo
+        parser.parse_key
+        parser.parse_octave
+        parser.parse_midi_channels
+        parser.parse_number_of_measures
+        parser.parse_number_of_tracks
+      end
+
+      it "must get the tab measures" do
+        parser.parse_measures
+
+        measures = parser.measures
+      end
+    end
   end
 end

@@ -15,6 +15,20 @@ module GTP
       @offset = 31
     end
 
+    def fix_header header
+      
+      counter = 0
+
+      new_header = header.reverse
+
+      while 8 > new_header.size
+        new_header << "0"
+
+      end
+
+      return new_header
+    end
+
     def read_lyrics_string
 
       length = IO.binread(self.file, INTEGER_SIZE, self.offset).bytes.to_a[0].to_i
@@ -141,6 +155,12 @@ module GTP
 
     def parse_number_of_tracks
       self.num_tracks = read_integer
+    end
+
+    def parse_measures
+      header = fix_header read_byte.to_s(2)
+
+      require "pry"; binding.pry
     end
 
     def to_json
