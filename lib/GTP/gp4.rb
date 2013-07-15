@@ -131,6 +131,10 @@ module GTP
       self.octave = read_byte
     end
 
+    def parse_midi_channels
+      increment_offset 12 * 16 * 4 # TODO
+    end
+
     def to_json
 
     end

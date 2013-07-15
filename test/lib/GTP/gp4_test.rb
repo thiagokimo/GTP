@@ -61,7 +61,7 @@ module GTP
         parser.parse_tempo
         parser.parse_key
         parser.parse_octave
-        # parser.parse_midi_channels
+        parser.parse_midi_channels
         # parser.parse_number_of_measures
         # parser.parse_number_of_tracks
 
