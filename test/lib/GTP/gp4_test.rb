@@ -61,14 +61,15 @@ module GTP
         parser.parse_tempo
         parser.parse_key
         parser.parse_octave
-        parser.parse_midi_channels
-        # parser.parse_number_of_measures
+        parser.parse_midi_channels # <----- PARSE ME PLEASE!!!
+        parser.parse_number_of_measures
         # parser.parse_number_of_tracks
 
         parser.tempo.must_equal 120
         parser.key.must_equal 1
         parser.octave.must_equal 0
         # parser.midi_channels
+        parser.num_measures.must_equal 2
       end
     end
     

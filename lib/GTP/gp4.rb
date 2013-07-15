@@ -2,7 +2,7 @@ module GTP
   class GP4
     FIELDS = %w(title subtitle artist album author copyright tab instruction notice triplet_feel)
 
-    attr_accessor :file, :version, :offset, :lyrics, :tempo, :key, :octave
+    attr_accessor :file, :version, :offset, :lyrics, :tempo, :key, :octave, :num_measures
 
     attr_accessor *FIELDS
 
@@ -124,7 +124,7 @@ module GTP
     end
 
     def parse_key
-      self.key = read_byte
+      self.key = read_integer
     end
 
     def parse_octave
@@ -132,7 +132,11 @@ module GTP
     end
 
     def parse_midi_channels
-      increment_offset 12 * 16 * 4 # TODO
+      increment_offset (12 * 16 * 4) # TODO
+    end
+
+    def parse_number_of_measures
+      self.num_measures = read_integer.to_i
     end
 
     def to_json
