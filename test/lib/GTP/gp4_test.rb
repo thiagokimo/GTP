@@ -47,6 +47,30 @@ module GTP
                                  ]
       end
     end
+
+    describe "Other information" do
+      parser = GP4.new "test/tabs/test.gp4"
+
+      before do
+        parser.parse_version
+        parser.parse_info
+        parser.parse_lyrics
+      end
+
+      it "about the piece" do
+        parser.parse_tempo
+        # parser.parse_key
+        # parser.parse_octave
+        # parser.parse_midi_channels
+        # parser.parse_number_of_measures
+        # parser.parse_number_of_tracks
+
+        parser.tempo.must_equal 120
+        # parser.key.must_equal 1
+        # parser.octave.must_equal 0
+        # parser.midi_channels
+      end
+    end
     
     it "must read the tablature extra info" do
 
