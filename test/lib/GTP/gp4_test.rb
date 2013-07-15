@@ -63,38 +63,15 @@ module GTP
         parser.parse_octave
         parser.parse_midi_channels # <----- PARSE ME PLEASE!!!
         parser.parse_number_of_measures
-        # parser.parse_number_of_tracks
+        parser.parse_number_of_tracks
 
         parser.tempo.must_equal 120
         parser.key.must_equal 1
         parser.octave.must_equal 0
         # parser.midi_channels
         parser.num_measures.must_equal 2
+        parser.num_tracks.must_equal 1
       end
-    end
-    
-    it "must read the tablature extra info" do
-
-    end
-
-    it "must read the tablature measures" do
-
-    end
-
-    it "must read the tablature tracks" do
-
-    end
-
-    it "must read the tablature song" do
-
-    end
-
-    it "must read the tablature chord diagrams" do
-
-    end
-
-    it "must increment the offset" do
-      
     end
   end
 end
