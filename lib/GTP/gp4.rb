@@ -22,7 +22,6 @@ module GTP
       increment_offset INTEGER_SIZE
 
       string = IO.binread(self.file, length, self.offset).gsub("\r\n", "\n")
-      # string = IO.binread(self.file, length, self.offset).gsub(/[^\d]/, " ")
 
       increment_offset length
 
@@ -110,8 +109,6 @@ module GTP
 
         self.lyrics.push(tuple)
       end
-
-      require "pry"; binding.pry
     end
 
     def to_json
