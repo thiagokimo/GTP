@@ -2,7 +2,7 @@ module GTP
   class GP4
     FIELDS = %w(title subtitle artist album author copyright tab instruction notice triplet_feel)
 
-    attr_accessor :file, :version, :offset, :lyrics, :tempo, :key, :octave, :num_measures, :num_tracks
+    attr_accessor :file, :version, :offset, :lyrics, :tempo, :key, :octave, :num_measures, :num_tracks, :measures
 
     attr_accessor *FIELDS
 
@@ -158,9 +158,71 @@ module GTP
     end
 
     def parse_measures
-      header = fix_header read_byte.to_s(2)
 
-      require "pry"; binding.pry
+      self.measures = Array.new
+
+      for n in 1..self.num_measures do
+
+        header = fix_header read_byte.to_s(2)
+        numerator = nil
+        denominator = nil
+        begin_repeat = nil
+        end_repeat = nil
+        marker_name = nil
+        marker_color = nil
+        tonality = nil
+        double_bar = nil
+
+        if header[0] == "1"
+          numerator = read_byte
+        end
+
+        if header[1] == "1"
+          denominator = read_byte
+        end
+
+        if header[2] == "1"
+          begin_repeat = true
+        end
+
+        if header[3] == "1"
+          end_repeat = read_byte
+        end
+
+        if header[4] == "1"
+          num_alt_ending = read_byte
+        end
+
+        if header[5] == "1"
+          marker_name = read_string
+          marker_color = read_integer
+        end
+
+        if header[6] == "1"
+          tonality = read_byte
+          increment_offset 1
+        end
+
+        if header[7] == "1"
+          double_bar = true
+        end
+
+        measure = Measure.new
+        measure.numerator = numerator
+        measure.denominator = denominator
+        measure.begin_repeat = begin_repeat
+        measure.end_repeat = end_repeat
+        measure.num_alt_ending = num_alt_ending
+        measure.marker_name = marker_name
+        measure.marker_color = marker_color
+        measure.tonality = tonality
+        measure.double_bar = double_bar
+
+        self.measures.push(measure)
+        # require "pry"; binding.pry
+      end
+
+      # require "pry"; binding.pry
     end
 
     def to_json
