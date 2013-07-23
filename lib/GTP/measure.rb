@@ -1,16 +1,18 @@
 module GTP
   class Measure
-    FIELDS = %w(header double_bar tonality marker num_alt_ending end_repeat begin_repeat den_key num_key)
+    FIELDS = %w(double_bar tonality marker_name marker_color num_alt_ending end_repeat begin_repeat denominator numerator)
     attr_accessor *FIELDS
 
-    def initialize(binary_data)
-      @binary_data = binary_data
-
-      setup
+    def ==(o)
+      o.class == self.class && o.state == state
     end
 
-    def setup
-      
+  protected
+    def state
+      info = Array.new
+      FIELDS.each do |f|
+        info.push(numerator, denominator, begin_repeat, end_repeat, num_alt_ending, marker_name, marker_color, tonality, double_bar)
+      end
     end
   end
 end
