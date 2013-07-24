@@ -219,10 +219,7 @@ module GTP
         measure.double_bar = double_bar
 
         self.measures.push(measure)
-        # require "pry"; binding.pry
       end
-
-      # require "pry"; binding.pry
     end
 
     def to_json
