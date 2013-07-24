@@ -11,7 +11,7 @@ module GTP
     def state
       info = Array.new
       FIELDS.each do |f|
-        info.push(numerator, denominator, begin_repeat, end_repeat, num_alt_ending, marker_name, marker_color, tonality, double_bar)
+        info.push(f)
       end
     end
   end
