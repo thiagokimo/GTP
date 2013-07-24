@@ -9,16 +9,6 @@ module GTP
       @offset = 0
     end
 
-    def read_chunk(size)
-      increment_offset size
-
-      result = IO.binread(self.file, size).bytes.to_a
-
-      raise "Byte is greather than expected" if result.size > 1
-
-      result.first.to_i
-    end
-
     def read_next_chunk_with_offset(size, offset)
       increment_offset size
       IO.binread(self.file, size, offset)
@@ -36,21 +26,28 @@ module GTP
 
     def read_default_string(amount_to_read=1)
       skip_useless_bytes
-      read_string amount_to_read
+      read_next_string amount_to_read
     end
 
-    def read_first_string
-      value = read_string
+    def read_string
+      value = read_next_string
       skip_bytes value.length
       value
     end
 
     def read_first_string_and_unpack
-      read_string.unpack("L")
+      read_next_string.unpack("L")
     end
 
     def read_byte
-      read_chunk 0#, self.offset
+
+      result = IO.binread(self.file, 1, self.offset).bytes.to_a
+
+      increment_offset 1
+
+      raise "Byte is greather than expected" if result.size > 1
+
+      result.first.to_i
     end
 
     def skip_integer
@@ -66,7 +63,7 @@ module GTP
       increment_offset 30-size
     end
 
-    def read_string(amount_to_read=1)
+    def read_next_string(amount_to_read=1)
       size = IO.binread(self.file, amount_to_read, self.offset).bytes.to_a.first.to_i
       increment_offset amount_to_read
       value = IO.binread(self.file, size, self.offset).strip

@@ -35,7 +35,7 @@ module GTP
     end
 
     def parse_version
-      self.version = @reader.read_first_string
+      self.version = @reader.read_string
     end
 
     def parse_info
@@ -55,33 +55,41 @@ module GTP
 
       notice = ""
 
-      # require 'pry'; binding.pry
       linesCount.times do
         notice << @reader.read_default_string << "\n"
       end
-
-      notice << @reader.read_default_string
 
       self.notice = notice
     end
 
     def parse_triplet_feel
-      self.triplet_feel = @reader.read_default_string
+      require 'pry'; binding.pry
+      self.triplet_feel = @reader.read_byte
+      require 'pry'; binding.pry
     end
 
     def parse_lyrics
       track = @reader.read_integer
       self.lyrics = Array.new
 
+      require 'pry'; binding.pry
+
       5.times do
+
+        require 'pry'; binding.pry
+
         bar = @reader.read_integer
         content = @reader.read_default_string Reader::INTEGER_SIZE
+
+        require 'pry'; binding.pry
 
         tuple = Hash.new
         tuple.store(bar, content.gsub("\r\n", "\n"))
 
         self.lyrics.push(tuple)
       end
+
+      require 'pry'; binding.pry
     end
 
     def parse_tempo
