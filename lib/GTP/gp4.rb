@@ -15,6 +15,12 @@ module GTP
       @file = File.open(tab_path, "r")
     end
 
+    def call
+      parse_version
+      parse_info
+      parse_lyrics
+    end
+
     def fix_header header
 
       counter = 0
@@ -29,14 +35,7 @@ module GTP
     end
 
     def parse_version
-
-      size = @reader.read_byte
-
-      self.version = @reader.read_next_chunk size
-
-      # size = IO.binread(self.file, 1).bytes.to_a[0].to_i
-
-      # self.version = IO.binread(self.file, size, 1).strip
+      self.version = @reader.read_first_string
     end
 
     def parse_info
@@ -47,56 +46,54 @@ module GTP
 
     FIELDS.each do |field|
       define_method "parse_#{field}" do
-        self.public_send "#{field}=", @reader.read_string
+        self.public_send "#{field}=", @reader.read_default_string
       end
     end
 
     def parse_notice
-      lines = IO.binread(self.file, INTEGER_SIZE, self.offset).unpack("L")[0]
-
-      @reader.increment_offset INTEGER_SIZE
+      linesCount = @reader.read_integer
 
       notice = ""
 
-      for i in 1..lines-1
-        notice << @reader.read_string << "\n"
+      # require 'pry'; binding.pry
+      linesCount.times do
+        notice << @reader.read_default_string << "\n"
       end
 
-      notice << @reader.read_string
+      notice << @reader.read_default_string
 
       self.notice = notice
     end
 
     def parse_triplet_feel
-      self.triplet_feel = IO.binread(self.file, 1, self.offset).bytes.to_a[0].to_s
-      @reader.increment_offset 1
+      self.triplet_feel = @reader.read_default_string
     end
 
     def parse_lyrics
-      track = read_integer
+      track = @reader.read_integer
       self.lyrics = Array.new
 
-      for i in 1..5
-        bar = read_integer
-        content = read_lyrics_string
+      5.times do
+        bar = @reader.read_integer
+        content = @reader.read_default_string Reader::INTEGER_SIZE
 
         tuple = Hash.new
-        tuple.store(bar, content)
+        tuple.store(bar, content.gsub("\r\n", "\n"))
 
         self.lyrics.push(tuple)
       end
     end
 
     def parse_tempo
-      self.tempo = read_integer.to_i
+      self.tempo = @reader.read_integer.to_i
     end
 
     def parse_key
-      self.key = read_integer
+      self.key = @reader.read_integer
     end
 
     def parse_octave
-      self.octave = read_byte
+      self.octave = @reader.read_byte
     end
 
     def parse_midi_channels
@@ -104,11 +101,11 @@ module GTP
     end
 
     def parse_number_of_measures
-      self.num_measures = read_integer.to_i
+      self.num_measures = @reader.read_integer.to_i
     end
 
     def parse_number_of_tracks
-      self.num_tracks = read_integer
+      self.num_tracks = @reader.read_integer
     end
 
     def parse_measures
