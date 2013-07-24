@@ -16,7 +16,7 @@ module GTP
     end
 
     def fix_header header
-      
+
       counter = 0
 
       new_header = header.reverse

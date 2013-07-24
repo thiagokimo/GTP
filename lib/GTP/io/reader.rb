@@ -9,27 +9,33 @@ module GTP
       @offset = 31
     end
 
-    def read_next_chunk delta
+    def read_next_chunk(delta)
+      increment_offset delta
 
       result = IO.binread(self.file, delta).bytes.to_a
 
       raise "Byte is greather than expected" if result.size > 1
 
-      string = result
+      result.first.to_i
+    end
 
+    def read_next_chunk_with_offset(delta, offset)
       increment_offset delta
+      chunk_of_bytes = IO.binread(self.file, delta, offset).bytes.to_a
 
-      string
+      raise "Byte is greather than expected" if chunk_of_bytes.size > 1
+
+      chunk_of_bytes.first.to_i
     end
 
     def read_integer
       result = IO.binread(self.file, INTEGER_SIZE, self.offset).bytes.to_a[0].to_i
       increment_offset INTEGER_SIZE
 
-      return result
+      result
     end
 
-    def increment_offset delta
+    def increment_offset(delta)
       self.offset = self.offset + delta
     end
 
@@ -48,11 +54,7 @@ module GTP
     end
 
     def read_byte
-      byte = IO.binread(self.file, 1, self.offset).bytes.to_a[0].to_i
-
-      increment_offset 1
-
-      return byte
+      read_next_chunk_with_offset 1, self.offset
     end
 
     def skip_integer
