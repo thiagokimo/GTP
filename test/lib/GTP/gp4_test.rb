@@ -35,7 +35,7 @@ module GTP
       end
 
       it "must read the tablature lyrics" do
-      
+
         parser.parse_lyrics
 
         parser.lyrics.must_equal [
@@ -119,7 +119,7 @@ module GTP
         expected_measures.push(first_measure)
         expected_measures.push(second_measure)
 
-        require "pry"; binding.pry
+        # require "pry"; binding.pry
 
         parser.measures.must_equal expected_measures
       end
