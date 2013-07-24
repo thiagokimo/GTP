@@ -11,8 +11,8 @@ module GTP
     INTEGER_SIZE = 4
 
     def initialize(tab_path)
+      @reader = Reader.new tab_path
       @file = File.open(tab_path, "r")
-      @offset = 31
     end
 
     def fix_header header
@@ -23,66 +23,20 @@ module GTP
 
       while 8 > new_header.size
         new_header << "0"
-
       end
 
       return new_header
     end
 
-    def read_lyrics_string
-
-      length = IO.binread(self.file, INTEGER_SIZE, self.offset).bytes.to_a[0].to_i
-
-      increment_offset INTEGER_SIZE
-
-      string = IO.binread(self.file, length, self.offset).gsub("\r\n", "\n")
-
-      increment_offset length
-
-      return string
-    end
-
-    def increment_offset delta
-      self.offset = self.offset + delta
-    end
-
-    def read_integer
-
-      result = IO.binread(self.file, INTEGER_SIZE, self.offset).bytes.to_a[0].to_i
-
-      increment_offset INTEGER_SIZE
-
-      return result
-    end
-
-    def read_string
-
-      increment_offset INTEGER_SIZE
-
-      length = IO.binread(self.file, 1, self.offset).bytes.to_a[0].to_i
-
-      increment_offset 1
-
-      string = IO.binread(self.file, length, self.offset)
-
-      increment_offset length
-
-      return string
-    end
-
-    def read_byte
-      byte = IO.binread(self.file, 1, self.offset).bytes.to_a[0].to_i
-
-      increment_offset 1
-
-      return byte
-    end
-
     def parse_version
 
-      size = IO.binread(self.file, 1).bytes.to_a[0].to_i
+      size = @reader.read_byte
 
-      self.version = IO.binread(self.file, size, 1).strip
+      self.version = @reader.read_next_chunk size
+
+      # size = IO.binread(self.file, 1).bytes.to_a[0].to_i
+
+      # self.version = IO.binread(self.file, size, 1).strip
     end
 
     def parse_info
@@ -93,29 +47,29 @@ module GTP
 
     FIELDS.each do |field|
       define_method "parse_#{field}" do
-        self.public_send "#{field}=", (self.public_send 'read_string')
+        self.public_send "#{field}=", @reader.read_string
       end
     end
 
     def parse_notice
       lines = IO.binread(self.file, INTEGER_SIZE, self.offset).unpack("L")[0]
 
-      increment_offset INTEGER_SIZE
+      @reader.increment_offset INTEGER_SIZE
 
       notice = ""
 
       for i in 1..lines-1
-        notice << read_string << "\n"
+        notice << @reader.read_string << "\n"
       end
 
-      notice << read_string
+      notice << @reader.read_string
 
       self.notice = notice
     end
 
     def parse_triplet_feel
       self.triplet_feel = IO.binread(self.file, 1, self.offset).bytes.to_a[0].to_s
-      increment_offset 1
+      @reader.increment_offset 1
     end
 
     def parse_lyrics
@@ -146,7 +100,7 @@ module GTP
     end
 
     def parse_midi_channels
-      increment_offset (12 * 16 * 4) # TODO
+      @reader.increment_offset (12 * 16 * 4) # TODO
     end
 
     def parse_number_of_measures
@@ -194,13 +148,13 @@ module GTP
         end
 
         if header[5] == "1"
-          marker_name = read_string
+          marker_name = @reader.read_string
           marker_color = read_integer
         end
 
         if header[6] == "1"
           tonality = read_byte
-          increment_offset 1
+          @reader.increment_offset 1
         end
 
         if header[7] == "1"
