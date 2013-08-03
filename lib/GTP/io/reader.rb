@@ -39,6 +39,10 @@ module GTP
       read_next_string.unpack("L")
     end
 
+    def read_int_string
+      read_next_string INTEGER_SIZE
+    end
+
     def read_byte
 
       result = IO.binread(self.file, 1, self.offset).bytes.to_a

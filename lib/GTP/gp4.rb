@@ -63,33 +63,23 @@ module GTP
     end
 
     def parse_triplet_feel
-      require 'pry'; binding.pry
-      self.triplet_feel = @reader.read_byte
-      require 'pry'; binding.pry
+      self.triplet_feel = @reader.read_byte.to_s
     end
 
     def parse_lyrics
       track = @reader.read_integer
-      self.lyrics = Array.new
-
-      require 'pry'; binding.pry
+      self.lyrics = []
 
       5.times do
 
-        require 'pry'; binding.pry
-
         bar = @reader.read_integer
-        content = @reader.read_default_string Reader::INTEGER_SIZE
+        content = @reader.read_int_string
 
-        require 'pry'; binding.pry
-
-        tuple = Hash.new
+        tuple = {}
         tuple.store(bar, content.gsub("\r\n", "\n"))
 
         self.lyrics.push(tuple)
       end
-
-      require 'pry'; binding.pry
     end
 
     def parse_tempo
