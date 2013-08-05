@@ -1,3 +1,5 @@
+require "json"
+
 module GTP
   class GP4
     FIELDS = %w(title subtitle artist album author copyright tab instruction notice triplet_feel)
@@ -108,7 +110,7 @@ module GTP
 
     def parse_measures
 
-      self.measures = Array.new
+      self.measures = []
 
       for n in 1..self.num_measures do
 
@@ -172,7 +174,25 @@ module GTP
     end
 
     def to_json
+    {
 
+      "score" => {
+
+        "info" => {
+          "version" => self.version,
+          "title" => self.title,
+          "subtitle" => self.subtitle,
+          "artist" => self.artist,
+          "album" => self.album,
+          "author" => self.author,
+          "copyright" => self.copyright
+        },
+        "tempo" => self.tempo,
+        "key" => self.key,
+        "num_track" => self.num_tracks,
+        "num_measures" => self.num_measures
+      }
+    }.to_json
     end
   end
 end

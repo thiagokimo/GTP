@@ -60,6 +60,12 @@ module GTP
       end
     end
 
+    describe "Serialization" do
+      it "must serialize as json" do
+        parser.to_json.must_equal "{\"score\":{\"info\":{\"version\":\"FICHIER GUITAR PRO v4.06\",\"title\":\"Title\",\"subtitle\":\"Subtitle\",\"artist\":\"Artist\",\"album\":\"Album\",\"author\":\"Author\",\"copyright\":\"Copyright\"},\"tempo\":null,\"key\":null,\"num_track\":null,\"num_measures\":null}}"
+      end
+    end
+
     # describe "Measures" do
     #   first_measure = Measure.new
     #   second_measure = Measure.new
