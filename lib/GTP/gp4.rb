@@ -21,6 +21,13 @@ module GTP
       parse_version
       parse_info
       parse_lyrics
+      parse_tempo
+      parse_key
+      parse_octave
+      parse_midi_channels # <----- PARSE ME PLEASE!!!
+      parse_number_of_measures
+      parse_number_of_tracks
+      parse_measures
     end
 
     def fix_header header
@@ -114,7 +121,7 @@ module GTP
 
       for n in 1..self.num_measures do
 
-        header = fix_header read_byte.to_s(2)
+        header = fix_header @reader.read_byte.to_s(2)
         numerator = nil
         denominator = nil
         begin_repeat = nil
@@ -125,11 +132,11 @@ module GTP
         double_bar = nil
 
         if header[0] == "1"
-          numerator = read_byte
+          numerator = @reader.read_byte
         end
 
         if header[1] == "1"
-          denominator = read_byte
+          denominator = @reader.read_byte
         end
 
         if header[2] == "1"
@@ -137,20 +144,20 @@ module GTP
         end
 
         if header[3] == "1"
-          end_repeat = read_byte
+          end_repeat = @reader.read_byte
         end
 
         if header[4] == "1"
-          num_alt_ending = read_byte
+          num_alt_ending = @reader.read_byte
         end
 
         if header[5] == "1"
           marker_name = @reader.read_string
-          marker_color = read_integer
+          marker_color = @reader.read_integer
         end
 
         if header[6] == "1"
-          tonality = read_byte
+          tonality = @reader.read_byte
           @reader.increment_offset 1
         end
 

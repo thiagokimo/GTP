@@ -3,17 +3,12 @@ require "test_helper"
 module GTP
   describe GP4 do
 
-    it "must read the file version" do
-      parser = GP4.new "test/tabs/test.gp4"
-      parser.parse_version
+    let(:parser) { GP4.new "test/tabs/test.gp4" }
+    before { parser.call }
 
-      # p parser.version
+    it "must read the file version" do
       parser.version.must_match %r/FICHIER GUITAR PRO v4./
     end
-
-    let(:parser) { GP4.new "test/tabs/test.gp4" }
-
-    before { parser.call }
 
     describe 'tablature info' do
       it "must read the tablature info" do
@@ -44,13 +39,6 @@ module GTP
 
     describe "Other information" do
       it "about the piece" do
-        parser.parse_tempo
-        parser.parse_key
-        parser.parse_octave
-        parser.parse_midi_channels # <----- PARSE ME PLEASE!!!
-        parser.parse_number_of_measures
-        parser.parse_number_of_tracks
-
         parser.tempo.must_equal 120
         parser.key.must_equal 1
         parser.octave.must_equal 0
@@ -62,58 +50,45 @@ module GTP
 
     describe "Serialization" do
       it "must serialize as json" do
-        parser.to_json.must_equal "{\"score\":{\"info\":{\"version\":\"FICHIER GUITAR PRO v4.06\",\"title\":\"Title\",\"subtitle\":\"Subtitle\",\"artist\":\"Artist\",\"album\":\"Album\",\"author\":\"Author\",\"copyright\":\"Copyright\"},\"tempo\":null,\"key\":null,\"num_track\":null,\"num_measures\":null}}"
+        parser.to_json.must_equal "{\"score\":{\"info\":{\"version\":\"FICHIER GUITAR PRO v4.06\",\"title\":\"Title\",\"subtitle\":\"Subtitle\",\"artist\":\"Artist\",\"album\":\"Album\",\"author\":\"Author\",\"copyright\":\"Copyright\"},\"tempo\":120,\"key\":1,\"num_track\":1,\"num_measures\":2}}"
       end
     end
 
-    # describe "Measures" do
-    #   first_measure = Measure.new
-    #   second_measure = Measure.new
+    describe "Measures" do
+      first_measure = Measure.new
+      second_measure = Measure.new
 
-    #   before do
-    #     parser.parse_version
-    #     parser.parse_info
-    #     parser.parse_lyrics
-    #     parser.parse_tempo
-    #     parser.parse_key
-    #     parser.parse_octave
-    #     parser.parse_midi_channels
-    #     parser.parse_number_of_measures
-    #     parser.parse_number_of_tracks
+      before do
+        first_measure.numerator = 4
+        first_measure.denominator = 4
+        first_measure.begin_repeat = true
+        first_measure.end_repeat = nil
+        first_measure.num_alt_ending = nil
+        first_measure.marker_name = nil
+        first_measure.marker_color = nil
+        first_measure.tonality = 1
+        first_measure.double_bar = nil
 
-    #     first_measure.numerator = 4
-    #     first_measure.denominator = 4
-    #     first_measure.begin_repeat = true
-    #     first_measure.end_repeat = nil
-    #     first_measure.num_alt_ending = nil
-    #     first_measure.marker_name = nil
-    #     first_measure.marker_color = nil
-    #     first_measure.tonality = 1
-    #     first_measure.double_bar = nil
+        second_measure.numerator = 7
+        second_measure.denominator = 8
+        second_measure.begin_repeat = nil
+        second_measure.end_repeat = nil
+        second_measure.num_alt_ending = nil
+        second_measure.marker_name = nil
+        second_measure.marker_color = nil
+        second_measure.tonality = nil
+        second_measure.double_bar = nil
+      end
 
-    #     second_measure.numerator = 7
-    #     second_measure.denominator = 8
-    #     second_measure.begin_repeat = nil
-    #     second_measure.end_repeat = nil
-    #     second_measure.num_alt_ending = nil
-    #     second_measure.marker_name = nil
-    #     second_measure.marker_color = nil
-    #     second_measure.tonality = nil
-    #     second_measure.double_bar = nil
+      it "must get the tab measures" do
+        parser.parse_measures
 
-    #   end
+        expected_measures = Array.new
+        expected_measures.push(first_measure)
+        expected_measures.push(second_measure)
 
-    #   it "must get the tab measures" do
-    #     parser.parse_measures
-
-    #     expected_measures = Array.new
-    #     expected_measures.push(first_measure)
-    #     expected_measures.push(second_measure)
-
-    #     # require "pry"; binding.pry
-
-    #     parser.measures.must_equal expected_measures
-    #   end
-    # end
+        parser.measures.must_equal expected_measures
+      end
+    end
   end
 end
