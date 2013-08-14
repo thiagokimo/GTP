@@ -4,6 +4,19 @@ module GTP
   describe GP4 do
 
     let(:parser) { GP4.new "test/tabs/test.gp4" }
+    let(:measure_params) {
+      {
+        numerator: rand(9),
+        denominator: rand(9),
+        begin_repeat: [true, false].sample,
+        end_repeat: rand(9),
+        num_alt_ending: rand(9),
+        marker_name: nil,
+        marker_color: nil,
+        tonality: [0,1,2,-1].sample,
+        double_bar: nil
+      }
+    }
     before { parser.call }
 
     it "must read the file version" do
@@ -54,41 +67,41 @@ module GTP
       end
     end
 
-    # describe "Measures" do
-    #   first_measure = Measure.new
-    #   second_measure = Measure.new
+    describe "Measures" do
 
-    #   before do
-    #     first_measure.numerator = 4
-    #     first_measure.denominator = 4
-    #     first_measure.begin_repeat = true
-    #     first_measure.end_repeat = nil
-    #     first_measure.num_alt_ending = nil
-    #     first_measure.marker_name = nil
-    #     first_measure.marker_color = nil
-    #     first_measure.tonality = 1
-    #     first_measure.double_bar = nil
+      first_measure_params = {
+        numerator: 4,
+        denominator: 4,
+        begin_repeat: true,
+        end_repeat: nil,
+        num_alt_ending: nil,
+        marker_name: nil,
+        marker_color: nil,
+        tonality: 1,
+        double_bar: nil
+      }
 
-    #     second_measure.numerator = 7
-    #     second_measure.denominator = 8
-    #     second_measure.begin_repeat = nil
-    #     second_measure.end_repeat = nil
-    #     second_measure.num_alt_ending = nil
-    #     second_measure.marker_name = nil
-    #     second_measure.marker_color = nil
-    #     second_measure.tonality = nil
-    #     second_measure.double_bar = nil
-    #   end
+      second_measure_params = {
+        numerator: 7,
+        denominator: 8,
+        begin_repeat: true,
+        end_repeat: nil,
+        num_alt_ending: nil,
+        marker_name: nil,
+        marker_color: nil,
+        tonality: 1,
+        double_bar: nil
+      }
 
-    #   it "must get the tab measures" do
-    #     parser.parse_measures
+      first_measure = Measure.new(first_measure_params)
+      second_measure = Measure.new(second_measure_params)
 
-    #     expected_measures = Array.new
-    #     expected_measures.push(first_measure)
-    #     expected_measures.push(second_measure)
+      it "must get the tab measures" do
+        parser.parse_measures
+        expected_measures = [first_measure,second_measure]
 
-    #     parser.measures.must_equal expected_measures
-    #   end
-    # end
+        parser.measures.must_equal expected_measures
+      end
+    end
   end
 end
