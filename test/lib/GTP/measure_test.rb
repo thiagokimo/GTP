@@ -2,20 +2,30 @@ require "test_helper"
 
 module GTP
   describe Measure do
-    
     it "must setup its attributes properly" do
-      # measures = Measure.new "11100010"
+      params = {
+        numerator: 4,
+        denominator: 4,
+        begin_repeat: true,
+        end_repeat: nil,
+        num_alt_ending: nil,
+        marker_name: nil,
+        marker_color: nil,
+        tonality: 1,
+        double_bar: nil
+      }
 
-      # measures.header.must_equal
-      # measures.double_bar.must_equal false
-      # measures.tonality.must_equal
-      # measures.marker.must_equal false
-      # measures.num_alt_ending.must_equal false
-      # measures.end_repeat.must_equal false
-      # measures.begin_repeat.must_equal true
-      # measures.den_key.must_equal 4
-      # measures.num_key.must_equal 4
+      measure = Measure.new(params)
 
+      measure.numerator.must_equal 4
+      measure.denominator.must_equal 4
+      measure.begin_repeat.must_equal true
+      measure.end_repeat.must_equal nil
+      measure.num_alt_ending.must_equal nil
+      measure.marker_name.must_equal nil
+      measure.marker_color.must_equal nil
+      measure.tonality.must_equal 1
+      measure.double_bar.must_equal nil
     end
   end
 end

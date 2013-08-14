@@ -122,60 +122,44 @@ module GTP
       for n in 1..self.num_measures do
 
         header = fix_header @reader.read_byte.to_s(2)
-        numerator = nil
-        denominator = nil
-        begin_repeat = nil
-        end_repeat = nil
-        marker_name = nil
-        marker_color = nil
-        tonality = nil
-        double_bar = nil
+
+        measure_params = {}
 
         if header[0] == "1"
-          numerator = @reader.read_byte
+          measure_params[:numerator] = @reader.read_byte
         end
 
         if header[1] == "1"
-          denominator = @reader.read_byte
+          measure_params[:denominator] = @reader.read_byte
         end
 
         if header[2] == "1"
-          begin_repeat = true
+          measure_params[:begin_repeat] = true
         end
 
         if header[3] == "1"
-          end_repeat = @reader.read_byte
+          measure_params[:end_repeat] = @reader.read_byte
         end
 
         if header[4] == "1"
-          num_alt_ending = @reader.read_byte
+          measure_params[:num_alt_ending] = @reader.read_byte
         end
 
         if header[5] == "1"
-          marker_name = @reader.read_string
-          marker_color = @reader.read_integer
+          measure_params[:marker_name] = @reader.read_string
+          measure_params[:marker_color] = @reader.read_integer
         end
 
         if header[6] == "1"
-          tonality = @reader.read_byte
+          measure_params[:tonality] = @reader.read_byte
           @reader.increment_offset 1
         end
 
         if header[7] == "1"
-          double_bar = true
+          measure_params[:double_bar] = true
         end
 
-        measure = Measure.new
-        measure.numerator = numerator
-        measure.denominator = denominator
-        measure.begin_repeat = begin_repeat
-        measure.end_repeat = end_repeat
-        measure.num_alt_ending = num_alt_ending
-        measure.marker_name = marker_name
-        measure.marker_color = marker_color
-        measure.tonality = tonality
-        measure.double_bar = double_bar
-
+        measure = Measure.new(measure_params)
         self.measures.push(measure)
       end
     end
