@@ -17,6 +17,19 @@ module GTP
         double_bar: nil
       }
     }
+    let(:channel_params) {
+      {
+        instrument: 24,
+        volume: 1,
+        balance: 1,
+        chorus: 0,
+        reverb: 0,
+        phaser: 0,
+        tremolo: 0,
+        blank1: 0,
+        blank2: 0
+      }
+    }
     before { parser.call }
 
     it "must read the file version" do
@@ -51,11 +64,20 @@ module GTP
     end
 
     describe "Other information" do
+
+      channels = []
+
+      before {
+        4.times do
+          channels.push(Channel.new(channel_params))
+        end
+      }
+
       it "about the piece" do
         parser.tempo.must_equal 120
         parser.key.must_equal 1
         parser.octave.must_equal 0
-        # parser.midi_channels
+        parser.midi_channels.must_equal channels
         parser.num_measures.must_equal 2
         parser.num_tracks.must_equal 1
       end
@@ -97,7 +119,6 @@ module GTP
       second_measure = Measure.new(second_measure_params)
 
       it "must get the tab measures" do
-        parser.parse_measures
         expected_measures = [first_measure,second_measure]
 
         parser.measures.must_equal expected_measures

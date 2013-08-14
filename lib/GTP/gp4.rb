@@ -4,7 +4,7 @@ module GTP
   class GP4
     FIELDS = %w(title subtitle artist album author copyright tab instruction notice triplet_feel)
 
-    attr_accessor :file, :version, :offset, :lyrics, :tempo, :key, :octave, :num_measures, :num_tracks, :measures
+    attr_accessor :file, :version, :offset, :lyrics, :tempo, :key, :octave, :num_measures, :num_tracks, :measures, :midi_channels
 
     attr_accessor *FIELDS
 
@@ -24,7 +24,7 @@ module GTP
       parse_tempo
       parse_key
       parse_octave
-      parse_midi_channels # <----- PARSE ME PLEASE!!!
+      parse_midi_channels
       parse_number_of_measures
       parse_number_of_tracks
       parse_measures
@@ -104,7 +104,26 @@ module GTP
     end
 
     def parse_midi_channels
-      @reader.increment_offset (12 * 16 * 4) # TODO
+
+      num_ports = 4
+      num_channels = 16
+      self.midi_channels = []
+
+      num_ports.times do
+        channel_params = {}
+        num_channels.times do
+          channel_params[:instrument] = @reader.read_integer
+          channel_params[:volume] = @reader.read_byte
+          channel_params[:balance] = @reader.read_byte
+          channel_params[:chorus] = @reader.read_byte
+          channel_params[:reverb] = @reader.read_byte
+          channel_params[:phaser] = @reader.read_byte
+          channel_params[:tremolo] = @reader.read_byte
+          channel_params[:blank1] = @reader.read_byte
+          channel_params[:blank2] = @reader.read_byte
+        end
+        self.midi_channels.push(Channel.new(channel_params))
+      end
     end
 
     def parse_number_of_measures
